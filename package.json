@@ -1,0 +1,15 @@
+{
+  "name": "carngame",
+  "version": "1.0.0",
+  "description": "server for ga,e",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "noah dultin",
+  "license": "ISC",
+  "dependencies": {
+    "serial": "^0.0.9",
+    "serialport": "^10.5.0"
+  }
+}
