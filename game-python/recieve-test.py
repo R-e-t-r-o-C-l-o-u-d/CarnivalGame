@@ -1,10 +1,23 @@
+import threading
+
 import serial
-ser = serial.Serial("COM5", 9600)
+import msvcrt
+
+ser = serial.Serial("COM3", 9600)
 print(ser.name)
 
-while True:
-    data = ser.readline().decode('utf-8').strip()
-    if data != "-1":
+
+def sendToArduino():
+    while True:
+        sendData = input()
+        ser.write(sendData.encode())
+
+
+def recieveFromArduino():
+    while True:
+        data = ser.readline().decode('utf-8').strip()
         print(data)
-    else:
-        print("No data")
+
+
+threading.Thread(target=sendToArduino).start()
+threading.Thread(target=recieveFromArduino).start()

@@ -1,0 +1,10 @@
+Difficulty:
+  [ ] - Modifier for the difficulty of the game depending on the score the player has
+  [ ] - The speed of the lamp will have a higher chance of being fast if the player has a high score
+  [X] - The minimum and maximum speed should be two variables declared in the beginning of the code
+  [X] - Score when the max speed is reached should be a variable declared in the beginning of the code
+  [ ] - The chance of the lamp changing direction should be dependant on the score the player has
+
+Communication:
+  [ ] - A function to send data to the server
+  [ ] - A function to send data to the arduino
