@@ -1,0 +1,63 @@
+int amountOfLed = 16;
+int offset = 1;
+long prevMillis = 0;
+int chosenLamp = 0;
+int delayMillis = 300;
+long lastButtonPress = 0;
+int delayMillisButton = 400;
+
+String leds[16] = {
+  "48", "38", "28", "18",
+  "47", "37", "27", "17",
+  "46", "36", "26", "16",
+  "45", "35", "25", "15"
+};
+
+void setup() {
+
+  Serial.begin(9600);
+  Serial.println("Hello World!");
+  pinMode(12, INPUT_PULLUP);
+  for (int i; i < 8; i++) {
+    pinMode(i + 2, OUTPUT);
+  }
+}
+
+void loop() {
+  long currentMillis = millis();
+  if(Serial.available()){
+        String input = Serial.readStringUntil('\n');
+
+        String command = input.substring(0, input.indexOf(' '));
+        String value = input.substring(input.indexOf(' '),-1);
+        command.trim();
+        value.trim();
+        if(command == "setlamp"){
+          chosenLamp = value.toInt()-1;
+          turnOffLamps();
+        } else{
+          Serial.println("Nope lol");
+        };
+  }
+
+  if (digitalRead(12) == LOW && currentMillis >= lastButtonPress + delayMillisButton) {
+    lastButtonPress = currentMillis;
+    Serial.println("Button pressed!");
+    Serial.println(chosenLamp);
+  };
+  if (currentMillis - prevMillis >= delayMillis) {
+    prevMillis = millis();
+
+    digitalWrite(leds[(chosenLamp + 15) % amountOfLed][0] - '0' + offset, LOW);
+    digitalWrite(leds[(chosenLamp + 15) % amountOfLed][1] - '0' + offset, LOW);
+    digitalWrite(leds[chosenLamp % amountOfLed][0] - '0' + offset, HIGH);
+    digitalWrite(leds[chosenLamp % amountOfLed][1] - '0' + offset, HIGH);
+    chosenLamp = (chosenLamp + 1) % amountOfLed;
+  };
+}
+
+void turnOffLamps(){
+  for(int i = 0; i<amountOfLed;i++){
+    digitalWrite(i + offset, LOW);
+  };
+}
