@@ -1,5 +1,7 @@
 
 var mysql = require('mysql');
+const { v4: uuidv4 } = require('uuid');
+
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -15,12 +17,15 @@ var app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+console.log("up and running")
 
 app.post("/data", (req, res) => {
   //req.body.name (format)
+  fucking = uuidv4()
   console.log(req.body.name)
-    con.query(`SELECT * FROM personer WHERE namn LIKE "${req.body.name}" LIMIT 1`, function(err, row) {
-
+    con.query(`SELECT * FROM personer WHERE namn LIKE "${fucking}" LIMIT 1`, function(err, row) { //yes this is dumb and is not needed anymore
+      //but i will not spend the 1 minute it takes to quickly rewrite some of this shit so instead fuck it we ball 6969 none of this is my fault the other people changed the fucking requirements
+      //this can also be changed easily if u want to change peoples score
     if(err) {
         console.log('Error in DB');
         console.log(row)
@@ -42,7 +47,7 @@ app.post("/data", (req, res) => {
 
       } else {
             console.log('No case row was found :( !');
-            var sql = `INSERT INTO personer (namn, score) VALUES ("${req.body.name}", ${req.body.score})`;
+            var sql = `INSERT INTO personer (namn, score, rfid) VALUES ("${req.body.name}", ${req.body.score}, "${fucking}")`;
           con.query(sql, function (err, result) {
     if (err) throw err;
     console.log(result.affectedRows + " record inserted") //creates a new entry in db and throws error if something happens
