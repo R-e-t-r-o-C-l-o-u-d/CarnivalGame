@@ -1,6 +1,7 @@
 
 var mysql = require('mysql');
 const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
 
 
 var con = mysql.createConnection({
@@ -12,13 +13,14 @@ var con = mysql.createConnection({
 
 var express = require('express');
 var bodyParser = require('body-parser');
+const { response } = require('express');
 
 var app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 console.log("up and running")
-
+/*
 app.post("/data", (req, res) => {
   //req.body.name (format)
   fucking = uuidv4()
@@ -56,7 +58,26 @@ app.post("/data", (req, res) => {
     }
 });
 res.end('done')//response to post request
+});*/ //deprecated feauture because the shitlings in my group decided to redo it for no reason, god kill me
+
+
+app.post("/beta", (req, res) => {
+
+  var content = req.body.name
+console.log(req.body.name)
+
+
+
+fs.writeFile('namefile.txt', content, err => {
+  if (err) {
+    console.error(err);
+  }
+  // file written successfully
 });
+res.redirect(301, '#insert path here')
+
+
+})
 
 // Server listening to PORT 3000
 app.listen(3000);
