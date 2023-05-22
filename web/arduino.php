@@ -84,6 +84,7 @@
 <script>
 
 const ws = new WebSocket('ws://localhost:8000');
+let DataStatus;
 
 ws.addEventListener('error', function(event) {
 	//document.getElementById("scoreboard-container").style.display = "block";
@@ -94,6 +95,7 @@ ws.addEventListener('error', function(event) {
 
 ws.addEventListener('message', function (event) {
   var data = JSON.parse(event.data);
+  DataStatus = data.status;
   if (data.status == 1) {
 			document.getElementById("scoreboard-container").style.display = "none";
 			document.getElementById("currently-playing-container").style.display = "block";
@@ -110,7 +112,6 @@ ws.addEventListener('message', function (event) {
 		  xhr.open('GET', url, true);
 		  xhr.onreadystatechange = function() {
 		    if (xhr.readyState === 4 && xhr.status === 200) {
-		      // Handle the response from the PHP script
 		      var response = xhr.responseText;
 		      console.log(response);
 		    }
@@ -122,7 +123,11 @@ ws.addEventListener('message', function (event) {
 	}
 });
 
-
+document.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13 && DataStatus != 1) {
+  	window.location.href = '.'
+  }
+});
 
 </script>
 <div class="scoreboard-container" id="scoreboard-container">

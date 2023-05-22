@@ -52,7 +52,6 @@ def start_game():
                 ser.write(f"speed {get_speed() * currentDirection}")
                 currentDirection = get_direction() * currentDirection
 
-
 def get_speed():
     speed = (minSpeed - (minSpeed - maxSpeed) * (level / 100)) * random.normalvariate(1, 0.2)
     return min(minSpeed, max(maxSpeed, int(speed)))
