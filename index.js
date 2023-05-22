@@ -74,7 +74,7 @@ fs.writeFile('namefile.txt', content, err => {
   }
   // file written successfully
 });
-res.redirect(301, '#insert path here')
+res.redirect(301, 'http://localhost:8080/arduino.php')
 
 
 })
