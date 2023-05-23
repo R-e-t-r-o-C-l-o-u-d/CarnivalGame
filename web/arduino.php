@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,7 +37,7 @@
 		  font-size: 35px;
 		  color: white;
 		  text-align: center;
-		  padding: 20px;
+		  padding: 30px;
 		}
 
 		/* Style the table cells */
@@ -45,7 +46,7 @@
 		  color: white;
 		  text-align: center;
 		  padding: 15px;
-		    border-bottom: 0px dashed rgba(255, 255, 255, 0.35);
+		  border-bottom: 0px dashed rgba(255, 255, 255, 0.35);
 		}
 
 		/* Style the first column */
@@ -77,59 +78,19 @@
 			transform: translate(-50%, -50%);
 			margin: 0 auto;
 		}
+
+		#press-enter {
+		  position: fixed;
+		  left: 50%;
+		  bottom: 20px;
+		  transform: translateX(-50%);
+		  text-align: center;
+		  font-size: 24px;
+		}
 	</style>
 </head>
 <body>
-	
-<script>
-
-const ws = new WebSocket('ws://localhost:8000');
-let DataStatus;
-
-ws.addEventListener('error', function(event) {
-	//document.getElementById("scoreboard-container").style.display = "block";
-	//document.getElementById("currently-playing-container").style.display = "none";
-  console.log('WebSocket connection error:', event);
-  //setInterval(window.location.reload(), 0)
-});
-
-ws.addEventListener('message', function (event) {
-  var data = JSON.parse(event.data);
-  DataStatus = data.status;
-  if (data.status == 1) {
-			document.getElementById("scoreboard-container").style.display = "none";
-			document.getElementById("currently-playing-container").style.display = "block";
-
-			document.getElementById('playing-as').innerHTML = "Playing as " + data.name;
-			document.getElementById('score').innerHTML = data.score;
-		}
-	else {
-		// On stand-by, update database after previous game.
-		function updateDatabase(name, score) {
-		  var url = 'updatedb.php?name=' + encodeURIComponent(name) + '&score=' + encodeURIComponent(score);
-
-		  var xhr = new XMLHttpRequest();
-		  xhr.open('GET', url, true);
-		  xhr.onreadystatechange = function() {
-		    if (xhr.readyState === 4 && xhr.status === 200) {
-		      var response = xhr.responseText;
-		      console.log(response);
-		    }
-		  };
-		  xhr.send();
-		}
-		updateDatabase(data.name, data.score)
-		window.location.reload();
-	}
-});
-
-document.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13 && DataStatus != 1) {
-  	window.location.href = '.'
-  }
-});
-
-</script>
+	<p id="press-enter">Press enter to start</p>
 <div class="scoreboard-container" id="scoreboard-container">
 <table>
 	<tr>
@@ -138,6 +99,7 @@ document.addEventListener("keyup", function(event) {
 	</tr>
 	<tr>
 	<?php
+	echo '<input type="hidden" name="usrname" id="usrname" value="' . $_SESSION['name'] . '">';
 	$host = "localhost";
 	$user = "root";
 	$password = "";
@@ -179,6 +141,58 @@ if ($num_rows < 10) {
 	<p id="score" class="score"></p>
 	<p class="playing-as" id="playing-as"></p>
 </div>
+
+<script>
+
+const ws = new WebSocket('ws://localhost:8000');
+let DataStatus;
+var usrnameInput = document.getElementById('usrname');
+var usrnameValue = usrnameInput.value;
+
+ws.addEventListener('error', function(event) {
+	//document.getElementById("scoreboard-container").style.display = "block";
+	//document.getElementById("currently-playing-container").style.display = "none";
+  console.log('WebSocket connection error:', event);
+  //setInterval(window.location.reload(), 0)
+});
+
+ws.addEventListener('message', function (event) {
+  var data = JSON.parse(event.data);
+  DataStatus = data.status;
+  if (data.status == 1) {
+			document.getElementById("scoreboard-container").style.display = "none";
+			document.getElementById("currently-playing-container").style.display = "block";
+
+			document.getElementById('playing-as').innerHTML = "Playing as " + usrnameValue;
+			document.getElementById('score').innerHTML = data.score;
+		}
+	else {
+    // On stand-by, update database after previous game.
+    function updateDatabase(name, score) {
+      var url = 'updatedb.php?name=' + encodeURIComponent(usrnameValue) + '&score=' + encodeURIComponent(score);
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var response = xhr.responseText;
+          console.log(response);
+          window.location.reload(); // Reload the page after the entry is added to the database
+        }
+      };
+      xhr.send();
+    }
+    updateDatabase(usrnameValue, data.score);
+  }
+});
+
+document.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13 && DataStatus != 1) {
+  	window.location.href = '.'
+  }
+});
+
+</script>
 
 </body>
 </html>

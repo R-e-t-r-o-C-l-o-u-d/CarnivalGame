@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +41,7 @@
     </script>
 </head>
 <body>
-    <form action="http://127.0.0.1:3000/beta" method="post">
+    <form action="http://localhost:8080/set_name.php" method="post">
         <input type="text" id="name" placeholder="Enter username" name="name" autocomplete="off">
     </form>
 </body>
