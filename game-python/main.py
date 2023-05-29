@@ -1,7 +1,7 @@
 import random
 import time
 import asyncio
-from CarnivalGame.web.webcom import client
+from web.webcom import client
 
 import serial
 
@@ -34,6 +34,7 @@ def main():
         if data != "-1":
             if data == "start":
                 gameIsRunning = True
+                asyncio.get_event_loop().run_until_complete(client.sendState(0, 1))
                 start_game()
                 print("Game started")
 

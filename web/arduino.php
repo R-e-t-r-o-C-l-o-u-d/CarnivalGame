@@ -161,6 +161,7 @@ ws.addEventListener('message', function (event) {
   DataStatus = data.status;
   if (data.status == 1) {
 			document.getElementById("scoreboard-container").style.display = "none";
+			document.getElementById("press-enter").style.display = "none";
 			document.getElementById("currently-playing-container").style.display = "block";
 
 			document.getElementById('playing-as').innerHTML = "Playing as " + usrnameValue;

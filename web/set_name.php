@@ -8,8 +8,15 @@
 </head>
 <body>
 	<?php
-		$_SESSION['name'] = $_REQUEST['name'];
-		header('Location: http://localhost:8080/arduino.php')
+	$_SESSION['name'] = $_REQUEST['name'];
+	header('Location: http://localhost:8080/arduino.php')
 	?>
+
+	<script>
+		const ws = new WebSocket('ws://localhost:8000')
+		ws.onopen = function(event) {
+			ws.send('ACTIVE')
+		}
+	</script>
 </body>
 </html>

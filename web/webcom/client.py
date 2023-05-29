@@ -2,6 +2,9 @@ import websockets
 import json
 import asyncio
 
+def graceful_stop():
+    pass
+
 async def sendState(score, status):
     url = "ws://127.0.0.1:8000"
     async with websockets.connect(url) as ws:
@@ -11,6 +14,6 @@ async def sendState(score, status):
         }
         
         await ws.send(json.dumps(data))
-        await asyncio.get_event_loop().run_in_executor(None, exit)
+        await asyncio.get_event_loop().run_in_executor(None, graceful_stop)
 
-#asyncio.get_event_loop().run_until_complete(sendState(250, 1))
+asyncio.get_event_loop().run_until_complete(sendState(250, 1))
